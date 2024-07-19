@@ -1,294 +1,328 @@
-import * as React from "react";
-import { observer } from "mobx-react";
-import arrayMove from "array-move";
-import { SortableContainer, SortableElement } from "react-sortable-hoc";
-import { IconObject } from "Component";
-import {
-	I,
-	U,
-	S,
-	keyboard,
-	translate,
-	analytics,
-	Storage,
-	sidebar,
-	Preview,
-} from "Lib";
+import * as React from 'react';
+import { trace } from 'mobx';
+import { observer } from 'mobx-react';
+import arrayMove from 'array-move';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { I, U, S, Key, keyboard, translate, analytics, Storage, Preview } from 'Lib';
 
-const Vault = observer(
-	class Vault extends React.Component {
-		node = null;
-		isAnimating = false;
-		top = 0;
-		timeoutHover = 0;
-		id = "";
+import VaultItem from './item';
 
-		constructor(props) {
-			super(props);
+const Vault = observer(class Vault extends React.Component {
+	
+	node = null;
+	isAnimating = false;
+	checkKeyUp = false;
+	top = 0;
+	timeoutHover = 0;
+	pressed = new Set();
+	n = -1;
 
-			this.onToggle = this.onToggle.bind(this);
-			this.onSortStart = this.onSortStart.bind(this);
-			this.onSortEnd = this.onSortEnd.bind(this);
-			this.onScroll = this.onScroll.bind(this);
-		}
+	constructor (props) {
+		super(props);
 
-		render() {
-			const items = U.Menu.getVaultItems();
-			const { spaceview } = S.Block;
+		this.onSortStart = this.onSortStart.bind(this);
+		this.onSortEnd = this.onSortEnd.bind(this);
+		this.onScroll = this.onScroll.bind(this);
+	};
 
-			const Item = SortableElement((item) => {
-				const cn = ["item"];
+    render () {
+		const items = U.Menu.getVaultItems();
 
-				if (item.id == spaceview) {
-					cn.push("isActive");
-				}
-
-				let descr = null;
-				if (item.isPersonal) {
-					descr = translate(`spaceAccessType${item.spaceAccessType}`);
-				}
-
-				return (
-					<div
-						id={`item-${item.id}`}
-						className={cn.join(" ")}
-						onClick={(e) => this.onClick(e, item)}
-						onMouseEnter={(e) => this.onMouseEnter(e, item)}
-						onMouseLeave={() => this.onMouseLeave()}
-						onContextMenu={(e) => this.onContextMenu(e, item)}
-					>
-						<div className="iconWrap">
-							<div className="border" />
-							<IconObject
-								object={item}
-								size={48}
-								forceLetter={true}
-							/>
-						</div>
-					</div>
-				);
-			});
-
-			const ItemIcon = (item) => (
-				<div
-					id={`item-${item.id}`}
-					className={`item ${item.id}`}
-					onClick={(e) => this.onClick(e, item)}
-					onMouseEnter={(e) => this.onMouseEnter(e, item)}
-					onMouseLeave={() => this.onMouseLeave()}
-				>
-					<div className="iconWrap">
-						<div className="border" />
-					</div>
-				</div>
-			);
-
-			const ItemIconSortable = SortableElement((it) => (
-				<ItemIcon {...it} index={it.index} />
-			));
-
-			const List = SortableContainer(() => (
-				<div id="scroll" className="side top" onScroll={this.onScroll}>
-					{items.map((item, i) => {
-						item.key = `item-space-${item.id}`;
-
-						let content = null;
-						if (["void", "gallery", "add"].includes(item.id)) {
-							content = <ItemIconSortable {...item} index={i} />;
-						} else {
-							content = <Item {...item} index={i} />;
-						}
-
-						return content;
-					})}
-				</div>
-			));
+		const Item = item => {
+			const onContextMenu = item.isButton ? null : e => this.onContextMenu(e, item);
 
 			return (
-				<div
-					ref={(node) => (this.node = node)}
-					id="vault"
-					className="vault"
-				>
-					<div className="head" />
-					<div className="body">
-						<List
-							axis="y"
-							lockAxis="y"
-							lockToContainerEdges={true}
-							transitionDuration={150}
-							distance={10}
-							onSortStart={this.onSortStart}
-							onSortEnd={this.onSortEnd}
-							helperClass="isDragging"
-							helperContainer={() => $(`#vault .side.top`).get(0)}
-						/>
+				<VaultItem 
+					id={item.id}
+					isButton={item.isButton}
+					onClick={e => this.onClick(e, item)}
+					onMouseEnter={e => this.onMouseEnter(e, item)}
+					onMouseLeave={() => this.onMouseLeave()}
+					onContextMenu={onContextMenu}
+				/>
+			);
+		};
 
-						<div className="side bottom">
-							<ItemIcon
-								id="settings"
-								name={translate("commonSettings")}
-							/>
-						</div>
+		const ItemSortable = SortableElement(it => <Item {...it} index={it.index} />);
+
+		const List = SortableContainer(() => (
+			<div id="scroll" className="side top" onScroll={this.onScroll}>
+				{items.map((item, i) => <ItemSortable {...item} key={`item-space-${item.id}`} index={i} />)}
+			</div>
+		));
+
+        return (
+            <div 
+				ref={node => this.node = node}
+				id="vault"
+				className="vault"
+            >
+				<div className="head" />
+				<div className="body">
+					<List 
+						axis="y" 
+						lockAxis="y"
+						lockToContainerEdges={true}
+						transitionDuration={150}
+						distance={10}
+						onSortStart={this.onSortStart}
+						onSortEnd={this.onSortEnd}
+						helperClass="isDragging"
+						helperContainer={() => $(`#vault .side.top`).get(0)}
+					/>
+
+					<div className="side bottom" onDragStart={e => e.preventDefault()}>
+						<Item id="settings" isButton={true} name={translate('commonSettings')} />
 					</div>
 				</div>
-			);
-		}
+            </div>
+		);
+    };
 
-		componentDidMount(): void {
-			this.resize();
-			this.rebind();
-		}
+	componentDidMount (): void {
+		this.resize();
+		this.rebind();
+	};
 
-		componentDidUpdate(): void {
-			const node = $(this.node);
-			const scroll = node.find("#scroll");
+	componentDidUpdate (): void {
+		$(this.node).find('#scroll').scrollTop(this.top);
+		this.setActive(S.Block.spaceview);
+	};
 
-			scroll.scrollTop(this.top);
-		}
+	componentWillUnmount (): void {
+		this.unbind();
+		window.clearTimeout(this.timeoutHover);
+	};
 
-		componentWillUnmount(): void {
-			this.unbind();
-			window.clearTimeout(this.timeoutHover);
-		}
+	unbind () {
+		const events = [ 'resize', 'keydown', 'keyup' ];
+		const ns = 'vault';
 
-		unbind() {
-			$(window).off("resize.vault");
-		}
+		$(window).off(events.map(it => `${it}.${ns}`).join(' '));
+	};
 
-		rebind() {
-			this.unbind();
-			$(window).on("resize.vault", () => this.resize());
-		}
+	rebind () {
+		const win = $(window);
 
-		onClick(e: any, item: any) {
-			e.stopPropagation();
+		this.unbind();
+		win.on('resize.vault', () => this.resize());
+		win.on('keydown.vault', e => this.onKeyDown(e));
+		win.on('keyup.vault', e => this.onKeyUp(e));
+	};
 
-			switch (item.id) {
-				case "add":
-					this.onAdd();
-					break;
+	getSpaceItems () {
+		return U.Menu.getVaultItems().filter(it => !it.isButton);
+	};
 
-				case "void":
-					this.onToggle();
-					break;
+	onKeyDown (e: any) {
+		const key = e.key.toLowerCase();
 
-				case "gallery":
-					S.Popup.open("usecase", {});
-					break;
+		if ([ Key.ctrl, Key.tab, Key.shift ].includes(key)) {
+			this.pressed.add(key);
+		};
 
-				case "settings":
-					S.Popup.open("settings", {});
-					break;
+		keyboard.shortcut('ctrl+tab, ctrl+shift+tab', e, pressed => {
+			this.checkKeyUp = true;
+			this.onArrow(pressed.match('shift') ? -1 : 1);
+		});
+	};
 
-				default:
-					U.Router.switchSpace(item.targetSpaceId);
-					analytics.event("SwitchSpace");
-					break;
-			}
-		}
+	onKeyUp (e: any) {
+		this.pressed.delete(e.key.toLowerCase());
 
-		setActive(id: string) {
-			const node = $(this.node);
+		if (
+			(this.pressed.has(Key.ctrl) || 
+			this.pressed.has(Key.tab) || 
+			this.pressed.has(Key.shift)) ||
+			!this.checkKeyUp
+		) {
+			return;
+		};
 
-			node.find(".item.isActive").removeClass("isActive");
-			node.find(`#item-${id}`).addClass("isActive");
-		}
+		this.checkKeyUp = false;
 
-		onAdd() {
-			S.Popup.open("settings", {
-				className: "isSpaceCreate",
-				data: {
-					page: "spaceCreate",
-					isSpace: true,
-					onCreate: (id) => {
-						U.Router.switchSpace(id, "", () =>
-							Storage.initPinnedTypes(),
-						);
-						analytics.event("SwitchSpace");
-					},
-				},
-			});
-		}
+		const node = $(this.node);
+		const items = this.getSpaceItems();
+		const item = items[this.n];
 
-		onContextMenu(e: any, item: any) {
-			U.Menu.spaceContext(item, {
-				className: "fixed",
-				classNameWrap: "fromSidebar",
-				element: `#vault #item-${item.id}`,
-				vertical: I.MenuDirection.Center,
-				route: analytics.route.navigation,
-			});
-		}
+		if (item) {
+			node.find('.item.hover').removeClass('hover');
+			U.Router.switchSpace(item.targetSpaceId, '', true);
+		};
 
-		onToggle() {
-			if (this.isAnimating) {
-				return;
-			}
+		Preview.tooltipHide();
+	};
 
-			const { wh } = U.Common.getWindowDimensions();
-			const node = $(this.node);
-			const container = $("#vaultContentContainer");
-			const isExpanded = node.hasClass("isExpanded");
+	onClick (e: any, item: any) {
+		e.stopPropagation();
 
-			node.toggleClass("isExpanded");
-			container.toggleClass("isExpanded");
-			container.css({ height: !isExpanded ? wh : "" });
+		switch (item.id) {
+			case 'add': {
+				this.onAdd();
+				break;
+			};
 
-			this.isAnimating = true;
-			sidebar.resizePage(null, false);
+			case 'gallery': {
+				S.Popup.open('usecase', {});
+				break;
+			};
 
-			window.setTimeout(() => (this.isAnimating = false), 300);
-		}
+			case 'settings': {
+				S.Popup.open('settings', {});
+				break;
+			};
 
-		onSortStart() {
-			keyboard.setDragging(true);
-			keyboard.disableSelection(true);
-		}
+			default: {
+				$(this.node).find('.item.hover').removeClass('hover');
+				U.Router.switchSpace(item.targetSpaceId, '', true);
+				break;
+			};
+		};
+	};
 
-		onSortEnd(result: any) {
-			const { oldIndex, newIndex } = result;
+	onArrow (dir: number) {
+		const items = this.getSpaceItems();
 
-			let ids = U.Menu.getVaultItems().map((it) => it.id);
-			ids = arrayMove(ids, oldIndex, newIndex);
-			Storage.set("spaceOrder", ids, true);
+		if (items.length == 1) {
+			return;
+		};
+		
+		this.n += dir;
+		if (this.n < 0) {
+			this.n = items.length - 1;
+		};
+		if (this.n >= items.length) {
+			this.n = 0;
+		};
 
-			keyboard.disableSelection(false);
-			keyboard.setDragging(false);
+		const next = items[this.n];
+		if (next) {
+			this.setHover(next);
+		};
+	};
 
-			this.forceUpdate();
-		}
+	setActive (id: string) {
+		const node = $(this.node);
 
-		onScroll() {
-			const node = $(this.node);
-			const scroll = node.find("#scroll");
+		node.find('.item.isActive').removeClass('isActive');
+		node.find(`#item-${id}`).addClass('isActive');
 
-			this.top = scroll.scrollTop();
-		}
+		this.n = this.getSpaceItems().findIndex(it => it.id == id);
+	};
 
-		onMouseEnter(e: any, item: any) {
-			if (keyboard.isDragging) {
-				return;
-			}
+	setHover (item: any) {
+		const node = $(this.node);
+		const head = node.find('.head');
+		const scroll = node.find('#scroll');
+		const el = node.find(`#item-${item.id}`);
+		const top = el.offset().top - scroll.position().top + this.top;
+		const height = scroll.height();
+		const hh = head.height();
+		const ih = el.height() + 8;
 
-			Preview.tooltipShow({
-				title: item.name,
-				element: $(e.currentTarget),
-				className: "big fromVault",
+		node.find('.item.hover').removeClass('hover');
+		el.addClass('hover');
+
+		const cb = () => {
+			Preview.tooltipShow({ 
+				text: item.name, 
+				element: el, 
+				className: 'fromVault',
 				typeX: I.MenuDirection.Left,
 				typeY: I.MenuDirection.Center,
-				offsetX: 66,
+				offsetX: 62,
+				delay: 1,
 			});
-		}
+		};
 
-		onMouseLeave() {
-			Preview.tooltipHide();
-		}
+		let s = -1;
+		if (top < this.top) {
+			s = 0;
+		};
+		if (top + ih > height + this.top + hh) {
+			s = this.top + height;
+		};
 
-		resize() {
-			$(this.node).css({ height: U.Common.getWindowDimensions().wh });
-		}
-	},
-);
+		if (s >= 0) {
+			Preview.tooltipHide(true);
+			scroll.stop().animate({ scrollTop: s }, 200, 'swing', () => cb());
+		} else {
+			cb();
+		};
+	};
+
+	onAdd () {
+		S.Popup.open('settings', { 
+			className: 'isSpaceCreate',
+			data: { 
+				page: 'spaceCreate', 
+				isSpace: true,
+				onCreate: (id) => {
+					U.Router.switchSpace(id, '', true, () => Storage.initPinnedTypes());
+				},
+			}, 
+		});
+	};
+
+	onContextMenu (e: any, item: any) {
+		U.Menu.spaceContext(item, {
+			className: 'fixed',
+			classNameWrap: 'fromSidebar',
+			element: `#vault #item-${item.id}`,
+			vertical: I.MenuDirection.Center,
+			route: analytics.route.navigation,
+		});
+	};
+
+	onSortStart () {
+		keyboard.setDragging(true);
+		keyboard.disableSelection(true);
+	};
+
+	onSortEnd (result: any) {
+		const { oldIndex, newIndex } = result;
+
+		let ids = U.Menu.getVaultItems().map(it => it.id);
+		ids = arrayMove(ids, oldIndex, newIndex);
+		Storage.set('spaceOrder', ids, true);
+
+		keyboard.disableSelection(false);
+		keyboard.setDragging(false);
+
+		this.forceUpdate();
+	};
+
+	onScroll () {
+		const node = $(this.node);
+		const scroll = node.find('#scroll');
+
+		this.top = scroll.scrollTop();
+	};
+
+	onMouseEnter (e: any, item: any) {
+		if (keyboard.isDragging) {
+			return;
+		};
+
+		Preview.tooltipShow({ 
+			text: item.name, 
+			element: $(e.currentTarget), 
+			className: 'fromVault', 
+			typeX: I.MenuDirection.Left,
+			typeY: I.MenuDirection.Center,
+			offsetX: 62,
+			delay: 300,
+		});
+	};
+
+	onMouseLeave () {
+		Preview.tooltipHide();
+	};
+
+	resize () {
+		$(this.node).css({ height: U.Common.getWindowDimensions().wh });
+	};
+
+});
 
 export default Vault;

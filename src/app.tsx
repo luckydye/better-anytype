@@ -3,7 +3,7 @@ import * as hs from "history";
 import * as Sentry from "@sentry/browser";
 import $ from "jquery";
 import raf from "raf";
-import type { RouteComponentProps } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { Router, Route, Switch } from "react-router-dom";
 import { Provider } from "mobx-react";
 import { configure, spy } from "mobx";
@@ -47,7 +47,7 @@ import {
 	sidebar,
 } from "Lib";
 
-import "pdfjs-dist/build/pdf.worker.entry.js";
+import("pdfjs-dist/build/pdf.worker.entry.js");
 
 configure({ enforceActions: "never" });
 
@@ -168,12 +168,8 @@ Sentry.setContext("info", {
 class RoutePage extends React.Component<RouteComponentProps> {
 	render() {
 		return (
-			<SelectionProvider
-				ref={(ref) => S.Common.refSet("selectionProvider", ref)}
-			>
-				<DragProvider
-					ref={(ref) => S.Common.refSet("dragProvider", ref)}
-				>
+			<SelectionProvider ref={(ref) => S.Common.refSet("selectionProvider", ref)}>
+				<DragProvider ref={(ref) => S.Common.refSet("dragProvider", ref)}>
 					<ListPopup key="listPopup" {...this.props} />
 					<ListMenu key="listMenu" {...this.props} />
 
@@ -250,7 +246,7 @@ class App extends React.Component<object, State> {
 						<Toast />
 						<ListNotification key="listNotification" />
 						<Share showOnce={true} />
-						<Vault />
+						<Vault ref={(ref) => S.Common.refSet("vault", ref)} />
 
 						<Switch>
 							{J.Route.map((path: string, i: number) => (
@@ -313,15 +309,11 @@ class App extends React.Component<object, State> {
 		Renderer.on("spellcheck", this.onSpellcheck);
 		Renderer.on("enter-full-screen", () => S.Common.fullscreenSet(true));
 		Renderer.on("leave-full-screen", () => S.Common.fullscreenSet(false));
-		Renderer.on("config", (e: any, config: any) =>
-			S.Common.configSet(config, true),
-		);
+		Renderer.on("config", (e: any, config: any) => S.Common.configSet(config, true));
 		Renderer.on("enter-full-screen", () => S.Common.fullscreenSet(true));
 		Renderer.on("leave-full-screen", () => S.Common.fullscreenSet(false));
 		Renderer.on("logout", () => S.Auth.logout(false, false));
-		Renderer.on("data-path", (e: any, p: string) =>
-			S.Common.dataPathSet(p),
-		);
+		Renderer.on("data-path", (e: any, p: string) => S.Common.dataPathSet(p));
 		Renderer.on("will-close-window", this.onWillCloseWindow);
 
 		Renderer.on("shutdownStart", () => {
@@ -422,7 +414,7 @@ class App extends React.Component<object, State> {
 							S.Common.configSet(account.config, false);
 
 							if (spaceId) {
-								U.Router.switchSpace(spaceId, "", cb);
+								U.Router.switchSpace(spaceId, "", false, cb);
 							} else {
 								U.Data.onInfo(account.info);
 								U.Data.onAuth({}, cb);
@@ -626,25 +618,18 @@ class App extends React.Component<object, State> {
 
 		const { focused, range } = focus.state;
 		const win = $(window);
-		const options: any = dictionarySuggestions.map((it) => ({
-			id: it,
-			name: it,
-		}));
+		const options: any = dictionarySuggestions.map((it) => ({ id: it, name: it }));
 		const element = $(document.elementFromPoint(x, y));
 		const isInput = element.is("input");
 		const isTextarea = element.is("textarea");
 		const isEditable = element.is(".editable");
 
-		options.push({
-			id: "add-to-dictionary",
-			name: translate("spellcheckAdd"),
-		});
+		options.push({ id: "add-to-dictionary", name: translate("spellcheckAdd") });
 
 		S.Menu.open("select", {
 			className: "fromBlock",
 			classNameWrap: "fromPopup",
-			recalcRect: () =>
-				rect ? { ...rect, y: rect.y + win.scrollTop() } : null,
+			recalcRect: () => (rect ? { ...rect, y: rect.y + win.scrollTop() } : null),
 			onOpen: () => S.Menu.close("blockContext"),
 			onClose: () => keyboard.disableContextOpen(false),
 			data: {
@@ -660,9 +645,7 @@ class App extends React.Component<object, State> {
 									const obj = Mark.cleanHtml(
 										$(`#block-${focused} #value`).html(),
 									);
-									const value = String(
-										obj.get(0).innerText || "",
-									);
+									const value = String(obj.get(0).innerText || "");
 
 									S.Block.updateContent(rootId, focused, {
 										text: value,
@@ -680,18 +663,13 @@ class App extends React.Component<object, State> {
 										to: range.from + item.id.length,
 									});
 									focus.apply();
-								} else if (
-									isInput ||
-									isTextarea ||
-									isEditable
-								) {
+								} else if (isInput || isTextarea || isEditable) {
 									let value = "";
 									if (isInput || isTextarea) {
 										value = String(element.val());
 									} else if (isEditable) {
 										value = String(
-											(element.get(0) as any).innerText ||
-												"",
+											(element.get(0) as any).innerText || "",
 										);
 									}
 									value = value.replace(

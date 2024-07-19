@@ -1,32 +1,33 @@
-import * as React from "react";
-import $ from "jquery";
-import { Title, Label, Button, Tag, Icon, Loader, Error } from "Component";
-import { I, C, S, U, J, translate, analytics } from "Lib";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Mousewheel } from "swiper/modules";
+import * as React from 'react';
+import $ from 'jquery';
+import { Title, Label, Button, Tag, Icon, Loader, Error } from 'Component';
+import { I, C, S, U, J, translate, analytics } from 'Lib';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Mousewheel } from 'swiper/modules';
 
 interface State {
 	isLoading: boolean;
 	error: string;
-}
+};
 
 class PopupUsecasePageItem extends React.Component<I.PopupUsecase, State> {
+
 	node = null;
 	swiper = null;
 	refButton = null;
-	state = {
+	state = { 
 		isLoading: false,
-		error: "",
+		error: '',
 	};
 
-	constructor(props: I.PopupUsecase) {
+	constructor (props: I.PopupUsecase) {
 		super(props);
 
 		this.onMenu = this.onMenu.bind(this);
 		this.onSwiper = this.onSwiper.bind(this);
-	}
-
-	render() {
+	};
+	
+	render () {
 		const { getAuthor, onAuthor, onPage } = this.props;
 		const { isLoading, error } = this.state;
 		const object = this.getObject();
@@ -35,14 +36,14 @@ class PopupUsecasePageItem extends React.Component<I.PopupUsecase, State> {
 		const categories = (object.categories || []).slice(0, 10);
 
 		return (
-			<div ref={(ref) => (this.node = ref)}>
-				{isLoading ? <Loader id="loader" /> : ""}
+			<div ref={ref => this.node = ref}>
+				{isLoading ? <Loader id="loader" /> : ''}
 
 				<div className="head">
 					<div className="inner">
-						<div className="element" onClick={() => onPage("", {})}>
+						<div className="element" onClick={() => onPage('', {})}>
 							<Icon className="back" />
-							{translate("commonBack")}
+							{translate('commonBack')}
 						</div>
 					</div>
 				</div>
@@ -50,30 +51,18 @@ class PopupUsecasePageItem extends React.Component<I.PopupUsecase, State> {
 				<div className="titleWrap">
 					<div className="side left">
 						<Title text={object.title} />
-						<Label
-							text={U.Common.sprintf(
-								translate("popupUsecaseAuthor"),
-								author,
-							)}
-							onClick={() => onAuthor(object.author)}
-						/>
+						<Label text={U.Common.sprintf(translate('popupUsecaseAuthor'), author)} onClick={() => onAuthor(object.author)} />
 					</div>
 					<div className="side right">
-						<Button
-							ref={(ref) => (this.refButton = ref)}
-							id="button-install"
-							text={translate("popupUsecaseInstall")}
-							arrow={true}
-							onClick={this.onMenu}
-						/>
+						<Button ref={ref => this.refButton = ref} id="button-install" text={translate('popupUsecaseInstall')} arrow={true} onClick={this.onMenu} />
 					</div>
 				</div>
 
 				<Error text={error} />
 
 				<div className="screenWrap">
-					<Swiper
-						spaceBetween={20}
+					<Swiper 
+						spaceBetween={20} 
 						slidesPerView={1.05}
 						mousewheel={true}
 						autoplay={{
@@ -83,9 +72,9 @@ class PopupUsecasePageItem extends React.Component<I.PopupUsecase, State> {
 						}}
 						centeredSlides={true}
 						loop={true}
-						modules={[Autoplay, Mousewheel]}
+						modules={[ Autoplay, Mousewheel ]}
 						onSlideChange={() => this.checkArrows()}
-						onSwiper={(swiper) => this.onSwiper(swiper)}
+						onSwiper={swiper => this.onSwiper(swiper)}
 					>
 						{screenshots.map((url: string, i: number) => (
 							<SwiperSlide key={i}>
@@ -94,16 +83,8 @@ class PopupUsecasePageItem extends React.Component<I.PopupUsecase, State> {
 						))}
 					</Swiper>
 
-					<Icon
-						id="arrowLeft"
-						className="arrow left"
-						onClick={() => this.onArrow(-1)}
-					/>
-					<Icon
-						id="arrowRight"
-						className="arrow right"
-						onClick={() => this.onArrow(1)}
-					/>
+					<Icon id="arrowLeft" className="arrow left" onClick={() => this.onArrow(-1)} />
+					<Icon id="arrowRight" className="arrow right" onClick={() => this.onArrow(1)} />
 				</div>
 
 				<div className="footerWrap">
@@ -116,158 +97,114 @@ class PopupUsecasePageItem extends React.Component<I.PopupUsecase, State> {
 								<Tag key={i} text={name} />
 							))}
 						</div>
-						<Label
-							text={U.Common.sprintf(
-								translate("popupUsecaseUpdated"),
-								U.Date.date(
-									U.Date.dateFormat(
-										I.DateFormat.MonthAbbrBeforeDay,
-									),
-									U.Date.now(),
-								),
-							)}
-						/>
+						<Label text={U.Common.sprintf(translate('popupUsecaseUpdated'), U.Date.date(U.Date.dateFormat(I.DateFormat.MonthAbbrBeforeDay), U.Date.now()))} />
 						<Label text={U.File.size(object.size)} />
 					</div>
 				</div>
 			</div>
 		);
-	}
+	};
 
 	componentDidMount(): void {
 		const object = this.getObject();
 
-		analytics.event("ScreenGalleryInstall", { name: object.name });
-	}
+		analytics.event('ScreenGalleryInstall', { name: object.name });
+	};
 
-	onSwiper(swiper) {
+	onSwiper (swiper) {
 		this.swiper = swiper;
 		this.checkArrows();
-	}
+	};
 
-	onArrow(dir: number) {
+	onArrow (dir: number) {
 		dir < 0 ? this.swiper.slidePrev() : this.swiper.slideNext();
-	}
+	};
 
-	checkArrows() {
+	checkArrows () {
 		if (!this.swiper) {
 			return;
-		}
+		};
 
 		const node = $(this.node);
-		const arrowLeft = node.find("#arrowLeft");
-		const arrowRight = node.find("#arrowRight");
+		const arrowLeft = node.find('#arrowLeft');
+		const arrowRight = node.find('#arrowRight');
 		const idx = this.swiper.activeIndex;
 		const length = (this.swiper.slides || []).length;
 
-		!idx ? arrowLeft.addClass("hide") : arrowLeft.removeClass("hide");
-		idx >= length - 1
-			? arrowRight.addClass("hide")
-			: arrowRight.removeClass("hide");
-	}
+		!idx ? arrowLeft.addClass('hide') : arrowLeft.removeClass('hide');
+		idx >= length - 1 ? arrowRight.addClass('hide') : arrowRight.removeClass('hide');
+	};
 
-	onMenu() {
+	onMenu () {
 		const { getId, close } = this.props;
 		const object = this.getObject();
 
 		const cb = (spaceId: string, isNew: boolean) => {
-			C.ObjectImportExperience(
-				spaceId,
-				object.downloadLink,
-				object.title,
-				isNew,
-				(message: any) => {
-					if (!message.error.code) {
-						analytics.event("GalleryInstall", {
-							name: object.name,
-						});
-					}
-				},
-			);
+			C.ObjectImportExperience(spaceId, object.downloadLink, object.title, isNew, (message: any) => {
+				if (!message.error.code) {
+					analytics.event('GalleryInstall', { name: object.name });
+				};
+			});
 			close();
 		};
 
-		S.Menu.open("select", {
+		S.Menu.open('select', {
 			element: `#${getId()} #button-install`,
 			offsetY: 2,
 			noFlipX: true,
-			className: "spaceSelect",
+			className: 'spaceSelect',
 			data: {
 				options: this.getSpaceOptions(),
-				noVirtualisation: true,
-				noScroll: true,
+				noVirtualisation: true, 
 				onSelect: (e: any, item: any) => {
-					const isNew = item.id == "add";
+					const isNew = item.id == 'add';
 
 					this.setState({ isLoading: true });
-					analytics.event("ClickGalleryInstallSpace", {
-						type: isNew ? "New" : "Existing",
-					});
+					analytics.event('ClickGalleryInstallSpace', { type: isNew ? 'New' : 'Existing' });
 
 					if (isNew) {
-						C.WorkspaceCreate(
-							{
-								name: object.title,
-								iconOption: U.Common.rand(
-									1,
-									J.Constant.count.icon,
-								),
-							},
-							I.Usecase.None,
-							(message: any) => {
-								if (!message.error.code) {
-									cb(message.objectId, true);
+						C.WorkspaceCreate({ name: object.title, iconOption: U.Common.rand(1, J.Constant.count.icon) }, I.Usecase.None, (message: any) => {
+							if (!message.error.code) {
+								cb(message.objectId, true);
 
-									analytics.event("CreateSpace", {
-										middleTime: message.middleTime,
-										route: analytics.route.gallery,
-									});
-								} else {
-									this.setState({
-										isLoading: false,
-										error: message.error.description,
-									});
-								}
-							},
-						);
+								analytics.event('CreateSpace', { middleTime: message.middleTime, route: analytics.route.gallery });
+							} else {
+								this.setState({ isLoading: false, error: message.error.description });
+							};
+						});
 					} else {
 						cb(item.targetSpaceId, false);
-					}
+					};
 				},
-			},
+			}
 		});
 
-		analytics.event("ClickGalleryInstall", { name: object.name });
-	}
+		analytics.event('ClickGalleryInstall', { name: object.name });
+	};
 
-	getSpaceOptions(): any[] {
+	getSpaceOptions (): any[] {
 		let list: any[] = [
-			{ name: translate("popupUsecaseMenuLabel"), isSection: true },
+			{ name: translate('popupUsecaseMenuLabel'), isSection: true }
 		];
 
-		if (list.length < J.Constant.limit.space) {
-			list.push({
-				id: "add",
-				icon: "add",
-				name: translate("popupUsecaseSpaceCreate"),
-			});
-		}
+		if (U.Space.canCreateSpace()) {
+			list.push({ id: 'add', icon: 'add', name: translate('popupUsecaseSpaceCreate') });
+		};
 
-		list = list.concat(
-			U.Space.getList()
-				.filter((it) => U.Space.canMyParticipantWrite(it.targetSpaceId))
-				.map((it) => ({ ...it, iconSize: 48, object: it })),
-		);
-
+		list = list.concat(U.Space.getList()
+			.filter(it => U.Space.canMyParticipantWrite(it.targetSpaceId))
+			.map(it => ({ ...it, iconSize: 48, object: it, isBig: true })));
+		
 		return list;
-	}
+	};
 
-	getObject(): any {
+	getObject (): any {
 		const { param } = this.props;
 		const { data } = param;
 
 		return data.object || {};
-	}
-}
+	};
+
+};
 
 export default PopupUsecasePageItem;

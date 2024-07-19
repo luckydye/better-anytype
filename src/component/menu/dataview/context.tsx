@@ -1,36 +1,25 @@
-import * as React from "react";
-import $ from "jquery";
-import { MenuItemVertical } from "Component";
-import {
-	I,
-	C,
-	S,
-	U,
-	J,
-	keyboard,
-	analytics,
-	translate,
-	focus,
-	Action,
-	Preview,
-} from "Lib";
+import * as React from 'react';
+import $ from 'jquery';
+import { MenuItemVertical } from 'Component';
+import { I, C, S, U, J, keyboard, analytics, translate, focus, Action, Preview } from 'Lib';
 
 class MenuContext extends React.Component<I.Menu> {
+	
 	n = -1;
-
-	constructor(props: I.Menu) {
+	
+	constructor (props: I.Menu) {
 		super(props);
-
+		
 		this.rebind = this.rebind.bind(this);
 		this.onClick = this.onClick.bind(this);
-	}
+	};
 
-	render() {
+	render () {
 		const sections = this.getSections();
 
 		const Section = (item: any) => (
-			<div id={"section-" + item.id} className="section">
-				{item.name ? <div className="name">{item.name}</div> : ""}
+			<div id={'section-' + item.id} className="section">
+				{item.name ? <div className="name">{item.name}</div> : ''}
 				<div className="items">
 					{item.children.map((action: any, i: number) => {
 						if (action.isDiv) {
@@ -39,17 +28,15 @@ class MenuContext extends React.Component<I.Menu> {
 									<div className="inner" />
 								</div>
 							);
-						}
+						};
 
 						return (
 							<MenuItemVertical
 								key={i}
 								{...action}
 								icon={action.icon || action.id}
-								onMouseEnter={(e) =>
-									this.onMouseEnter(e, action)
-								}
-								onClick={(e) => this.onClick(e, action)}
+								onMouseEnter={e => this.onMouseEnter(e, action)}
+								onClick={e => this.onClick(e, action)}
 							/>
 						);
 					})}
@@ -66,88 +53,47 @@ class MenuContext extends React.Component<I.Menu> {
 						))}
 					</React.Fragment>
 				) : (
-					<div className="item empty">
-						{translate("menuDataviewContextNoAvailableActions")}
-					</div>
+					<div className="item empty">{translate('menuDataviewContextNoAvailableActions')}</div>
 				)}
 			</div>
 		);
-	}
-
-	componentDidMount() {
+	};
+	
+	componentDidMount () {
 		this.rebind();
-	}
-
-	componentWillUnmount() {
+	};
+	
+	componentWillUnmount () {
 		S.Menu.closeAll(J.Menu.dataviewContext);
-	}
+	};
 
-	rebind() {
+	rebind () {
 		this.unbind();
-		$(window).on("keydown.menu", (e) => this.props.onKeyDown(e));
+		$(window).on('keydown.menu', e => this.props.onKeyDown(e));
 		window.setTimeout(() => this.props.setActive(), 15);
-	}
-
-	unbind() {
-		$(window).off("keydown.menu");
-	}
-
-	getSections() {
+	};
+	
+	unbind () {
+		$(window).off('keydown.menu');
+	};
+	
+	getSections () {
 		const { param } = this.props;
 		const { data } = param;
 		const { subId, getObject, isCollection } = data;
 		const objectIds = this.getObjectIds();
 		const length = objectIds.length;
 		const canWrite = U.Space.canMyParticipantWrite();
-		const exportObject = {
-			id: "export",
-			icon: "export",
-			name: translate("menuObjectExport"),
-		};
+		const exportObject = { id: 'export', icon: 'export', name: translate('menuObjectExport') };
 
-		let pageCopy = {
-			id: "copy",
-			icon: "copy",
-			name: translate("commonDuplicate"),
-		};
-		let open = {
-			id: "open",
-			icon: "expand",
-			name: translate("commonOpenObject"),
-		};
-		let linkTo = {
-			id: "linkTo",
-			icon: "linkTo",
-			name: translate("commonLinkTo"),
-			arrow: true,
-		};
-		let addCollection = {
-			id: "addCollection",
-			icon: "collection",
-			name: translate("commonAddToCollection"),
-			arrow: true,
-		};
-		let changeType = {
-			id: "changeType",
-			icon: "pencil",
-			name: translate("blockFeaturedTypeMenuChangeType"),
-			arrow: true,
-		};
-		let createWidget = {
-			id: "createWidget",
-			icon: "createWidget",
-			name: translate("menuObjectCreateWidget"),
-		};
-		let unlink = {
-			id: "unlink",
-			icon: "unlink",
-			name: translate("menuDataviewContextUnlinkFromCollection"),
-		};
-		let relation = {
-			id: "relation",
-			icon: "editRelation",
-			name: translate("menuDataviewContextEditRelations"),
-		};
+		let pageCopy = { id: 'copy', icon: 'copy', name: translate('commonDuplicate') };
+		let open = { id: 'open', icon: 'expand', name: translate('commonOpenObject') };
+		let linkTo = { id: 'linkTo', icon: 'linkTo', name: translate('commonLinkTo'), arrow: true };
+		let addCollection = { id: 'addCollection', icon: 'collection', name: translate('commonAddToCollection'), arrow: true };
+		let changeType = { id: 'changeType', icon: 'pencil', name: translate('blockFeaturedTypeMenuChangeType'), arrow: true };
+		let createWidget = { id: 'createWidget', icon: 'createWidget', name: translate('menuObjectCreateWidget') };
+		let unlink = { id: 'unlink', icon: 'unlink', name: translate('menuDataviewContextUnlinkFromCollection') };
+		let relation = { id: 'relation', icon: 'editRelation', name: translate('menuDataviewContextEditRelations') };
 		let archive = null;
 		let archiveCnt = 0;
 		let fav = null;
@@ -169,60 +115,39 @@ class MenuContext extends React.Component<I.Menu> {
 
 			if (!object || object._empty_) {
 				return;
-			}
+			};
 
 			if (object.isFavorite) favCnt++;
 			if (object.isArchived) archiveCnt++;
 
-			if (
-				!S.Block.isAllowed(object.restrictions, [
-					I.RestrictionObject.Delete,
-				])
-			) {
+			if (!S.Block.isAllowed(object.restrictions, [ I.RestrictionObject.Delete ])) {
 				allowedArchive = false;
-			}
-			if (
-				!S.Block.isAllowed(object.restrictions, [
-					I.RestrictionObject.Details,
-				]) ||
-				object.isArchived
-			) {
+			};
+			if (!S.Block.isAllowed(object.restrictions, [ I.RestrictionObject.Details ]) || object.isArchived) {
 				allowedFav = false;
-			}
-			if (
-				!S.Block.isAllowed(object.restrictions, [
-					I.RestrictionObject.Duplicate,
-				])
-			) {
+			};
+			if (!S.Block.isAllowed(object.restrictions, [ I.RestrictionObject.Duplicate ])) {
 				allowedCopy = false;
-			}
-			if (
-				!S.Block.isAllowed(object.restrictions, [
-					I.RestrictionObject.Type,
-				])
-			) {
+			};
+			if (!S.Block.isAllowed(object.restrictions, [ I.RestrictionObject.Type ])) {
 				allowedType = false;
-			}
-			if (
-				!S.Block.isAllowed(object.restrictions, [
-					I.RestrictionObject.Details,
-				])
-			) {
+			};
+			if (!S.Block.isAllowed(object.restrictions, [ I.RestrictionObject.Details ])) {
 				allowedRelation = false;
-			}
+			};
 		});
 
 		if (favCnt == length) {
-			fav = { id: "unfav", name: translate("commonRemoveFromFavorites") };
+			fav = { id: 'unfav', name: translate('commonRemoveFromFavorites') };
 		} else {
-			fav = { id: "fav", name: translate("commonAddToFavorites") };
-		}
+			fav = { id: 'fav', name: translate('commonAddToFavorites') };
+		};
 
 		if (length > 1) {
 			allowedOpen = false;
 			allowedLink = false;
 			allowedWidget = false;
-		}
+		};
 
 		if (!canWrite) {
 			allowedArchive = false;
@@ -234,7 +159,7 @@ class MenuContext extends React.Component<I.Menu> {
 			allowedWidget = false;
 			allowedRelation = false;
 			allowedCollection = false;
-		}
+		};
 
 		if (archiveCnt == length) {
 			allowedOpen = false;
@@ -243,77 +168,59 @@ class MenuContext extends React.Component<I.Menu> {
 			allowedType = false;
 			allowedFav = false;
 			allowedCollection = false;
-			archive = {
-				id: "unarchive",
-				icon: "restore",
-				name: translate("commonRestoreFromBin"),
-			};
+			archive = { id: 'unarchive', icon: 'restore', name: translate('commonRestoreFromBin') };
 		} else {
-			archive = {
-				id: "archive",
-				icon: "remove",
-				name: translate("commonMoveToBin"),
-			};
-		}
+			archive = { id: 'archive', icon: 'remove', name: translate('commonMoveToBin') };
+		};
 
-		if (!allowedArchive) archive = null;
-		if (!allowedFav) fav = null;
-		if (!allowedCopy) pageCopy = null;
-		if (!allowedType) changeType = null;
-		if (!allowedLink) linkTo = null;
-		if (!allowedOpen) open = null;
-		if (!allowedUnlink) unlink = null;
-		if (!allowedWidget) createWidget = null;
-		if (!allowedRelation) relation = null;
-		if (!allowedCollection) addCollection = null;
+		if (!allowedArchive)	 archive = null;
+		if (!allowedFav)		 fav = null;
+		if (!allowedCopy)		 pageCopy = null;
+		if (!allowedType)		 changeType = null;
+		if (!allowedLink)		 linkTo = null;
+		if (!allowedOpen)		 open = null;
+		if (!allowedUnlink)		 unlink = null;
+		if (!allowedWidget)		 createWidget = null;
+		if (!allowedRelation)	 relation = null;
+		if (!allowedCollection)	 addCollection = null;
 
 		let sections = [
-			{
-				children: [
-					createWidget,
-					open,
-					fav,
-					linkTo,
-					addCollection,
-					exportObject,
-					relation,
-				],
-			},
-			{ children: [changeType, pageCopy, unlink, archive] },
+			{ children: [ createWidget, open, fav, linkTo, addCollection, exportObject, relation ] },
+			{ children: [ changeType, pageCopy, unlink, archive ] },
 		];
 
 		sections = sections.filter((section: any) => {
-			section.children = section.children.filter((it) => it);
+			section.children = section.children.filter(it => it);
 			return section.children.length > 0;
 		});
 
 		return sections;
-	}
+	};
 
-	getObjectIds() {
+	getObjectIds () {
 		return this.props.param.data.objectIds || [];
-	}
+	};
 
-	getObject(subId: string, getObject: (id: string) => any, id: string) {
+	getObject (subId: string, getObject: (id: string) => any, id: string) {
 		return getObject ? getObject(id) : S.Detail.get(subId, id);
-	}
-
-	getItems() {
+	};
+	
+	getItems () {
 		const sections = this.getSections();
-
+		
 		let items: any[] = [];
 		for (const section of sections) {
 			items = items.concat(section.children);
-		}
-
+		};
+		
 		return items;
-	}
+	};
 
-	onMouseEnter(e: any, item: any) {
+	onMouseEnter (e: any, item: any) {
 		this.onOver(e, item);
-	}
+	};
 
-	onOver(e: any, item: any) {
+	onOver (e: any, item: any) {
 		const { param, getId, getSize, close } = this.props;
 		const { data, className, classNameWrap } = param;
 		const { onLinkTo, route } = data;
@@ -321,12 +228,12 @@ class MenuContext extends React.Component<I.Menu> {
 
 		if (!keyboard.isMouseDisabled) {
 			this.props.setActive(item, false);
-		}
+		};
 
 		if (!item.arrow || !objectIds.length) {
 			S.Menu.closeAll(J.Menu.dataviewContext);
 			return;
-		}
+		};
 
 		const itemId = objectIds[0];
 		const menuParam = {
@@ -339,119 +246,76 @@ class MenuContext extends React.Component<I.Menu> {
 			classNameWrap,
 			data: {
 				rebind: this.rebind,
-			},
+			}
 		};
 
-		let menuId = "";
+		let menuId = '';
 		switch (item.id) {
-			case "changeType": {
-				menuId = "typeSuggest";
+			case 'changeType': {
+				menuId = 'typeSuggest';
 				menuParam.data = Object.assign(menuParam.data, {
-					filter: "",
+					filter: '',
 					filters: [
-						{
-							operator: I.FilterOperator.And,
-							relationKey: "recommendedLayout",
-							condition: I.FilterCondition.In,
-							value: U.Object.getPageLayouts(),
-						},
+						{ operator: I.FilterOperator.And, relationKey: 'recommendedLayout', condition: I.FilterCondition.In, value: U.Object.getPageLayouts() },
 					],
 					onClick: (item: any) => {
 						C.ObjectListSetObjectType(objectIds, item.uniqueKey);
-						analytics.event("ChangeObjectType", {
-							objectType: item.id,
-							count: objectIds.length,
-							route,
-						});
+						analytics.event('ChangeObjectType', { objectType: item.id, count: objectIds.length, route });
 
 						close();
-					},
+					}
 				});
 				break;
-			}
+			};
 
-			case "linkTo": {
-				menuId = "searchObject";
+			case 'linkTo': {
+				menuId = 'searchObject';
 				menuParam.data = Object.assign(menuParam.data, {
 					filters: [
-						{
-							operator: I.FilterOperator.And,
-							relationKey: "layout",
-							condition: I.FilterCondition.In,
-							value: U.Object.getPageLayouts(),
-						},
-						{
-							operator: I.FilterOperator.And,
-							relationKey: "isReadonly",
-							condition: I.FilterCondition.NotEqual,
-							value: true,
-						},
+						{ operator: I.FilterOperator.And, relationKey: 'layout', condition: I.FilterCondition.In, value: U.Object.getPageLayouts() },
+						{ operator: I.FilterOperator.And, relationKey: 'isReadonly', condition: I.FilterCondition.NotEqual, value: true },
 					],
 					rootId: itemId,
 					blockId: itemId,
-					blockIds: [itemId],
+					blockIds: [ itemId ],
 					type: I.NavigationType.LinkTo,
-					skipIds: [itemId],
+					skipIds: [ itemId ],
 					position: I.BlockPosition.Bottom,
 					canAdd: true,
 					onSelect: (el: any) => {
 						if (onLinkTo) {
 							onLinkTo(itemId, el.id);
-						}
+						};
 
 						close();
 					},
 				});
 				break;
-			}
+			};
 
-			case "addCollection": {
+			case 'addCollection': {
 				const collectionType = S.Record.getCollectionType();
 
-				menuId = "searchObject";
-				menuParam.className = "single";
+				menuId = 'searchObject';
+				menuParam.className = 'single';
 				menuParam.data = Object.assign(menuParam.data, {
 					filters: [
-						{
-							operator: I.FilterOperator.And,
-							relationKey: "layout",
-							condition: I.FilterCondition.In,
-							value: I.ObjectLayout.Collection,
-						},
-						{
-							operator: I.FilterOperator.And,
-							relationKey: "isReadonly",
-							condition: I.FilterCondition.NotEqual,
-							value: true,
-						},
+						{ operator: I.FilterOperator.And, relationKey: 'layout', condition: I.FilterCondition.In, value: I.ObjectLayout.Collection },
+						{ operator: I.FilterOperator.And, relationKey: 'isReadonly', condition: I.FilterCondition.NotEqual, value: true },
 					],
 					rootId: itemId,
 					blockId: itemId,
-					blockIds: [itemId],
-					skipIds: [itemId],
+					blockIds: [ itemId ],
+					skipIds: [ itemId ],
 					canAdd: true,
 					addParam: {
-						name: translate("blockDataviewCreateNewCollection"),
-						nameWithFilter: translate(
-							"blockDataviewCreateNewCollectionWithName",
-						),
+						name: translate('blockDataviewCreateNewCollection'),
+						nameWithFilter: translate('blockDataviewCreateNewCollectionWithName'),
 						onClick: (details: any) => {
-							C.ObjectCreate(
-								{
-									...details,
-									layout: I.ObjectLayout.Collection,
-								},
-								[],
-								"",
-								collectionType?.uniqueKey,
-								S.Common.space,
-								(message) => {
-									Action.addToCollection(
-										message.objectId,
-										objectIds,
-									);
-								},
-							);
+							C.ObjectCreate({ ...details, layout: I.ObjectLayout.Collection }, [], '', collectionType?.uniqueKey, S.Common.space, message => {
+								Action.addToCollection(message.objectId, objectIds);
+								U.Object.openConfig(message.details);
+							});
 						},
 					},
 					onSelect: (el: any) => {
@@ -459,163 +323,125 @@ class MenuContext extends React.Component<I.Menu> {
 
 						if (onLinkTo) {
 							onLinkTo(itemId, el.id);
-						}
+						};
 
 						close();
 					},
 				});
 				break;
-			}
-		}
+			};
+		};
 
 		if (menuId && !S.Menu.isOpen(menuId, item.id)) {
 			S.Menu.closeAll(J.Menu.dataviewContext, () => {
 				S.Menu.open(menuId, menuParam);
 			});
-		}
-	}
+		};
+	};
 
-	onClick(e: any, item: any) {
+	onClick (e: any, item: any) {
 		if (item.arrow) {
 			return;
-		}
+		};
 
 		const { param, close } = this.props;
 		const { data } = param;
-		const {
-			subId,
-			getObject,
-			onSelect,
-			targetId,
-			isCollection,
-			route,
-			relationKeys,
-			view,
-			blockId,
-		} = data;
+		const { subId, getObject, onSelect, targetId, isCollection, route, relationKeys, view, blockId } = data;
 		const objectIds = this.getObjectIds();
 		const win = $(window);
 		const length = objectIds.length;
-		const first =
-			length == 1 ? this.getObject(subId, getObject, objectIds[0]) : null;
+		const first = length == 1 ? this.getObject(subId, getObject, objectIds[0]) : null;
 		const cb = () => {
 			if (onSelect) {
 				onSelect(item.id);
-			}
+			};
 		};
 
 		focus.clear(false);
 
 		switch (item.id) {
-			case "open": {
+
+			case 'open': {
 				U.Object.openConfig(first);
 				break;
-			}
+			};
 
-			case "copy": {
+			case 'copy': {
 				C.ObjectListDuplicate(objectIds, (message: any) => {
 					if (message.error.code || !message.ids.length) {
 						return;
-					}
+					};
 
 					if (first) {
-						U.Object.openConfig({
-							id: message.ids[0],
-							layout: first.layout,
-						});
-					}
+						U.Object.openConfig({ id: message.ids[0], layout: first.layout });
+					};
 
-					analytics.event("DuplicateObject", {
-						count: length,
-						route,
-					});
+					analytics.event('DuplicateObject', { count: length, route });
 
 					if (isCollection) {
 						C.ObjectCollectionAdd(targetId, message.ids, () => {
 							cb();
 
-							analytics.event("LinkToObject", {
-								linkType: "Collection",
-								route,
-							});
+							analytics.event('LinkToObject', { linkType: 'Collection', route });
 						});
 					} else {
 						cb();
-					}
+					};
 				});
 				break;
-			}
+			};
 
-			case "archive": {
+			case 'archive': {
 				Action.archive(objectIds, cb);
-				win.trigger("removeGraphNode", { ids: objectIds });
+				win.trigger('removeGraphNode', { ids: objectIds });
 				break;
-			}
+			};
 
-			case "unarchive": {
+			case 'unarchive': {
 				Action.restore(objectIds, cb);
 				break;
-			}
+			};
 
-			case "fav": {
+			case 'fav': {
 				Action.setIsFavorite(objectIds, true, route);
 				break;
-			}
+			};
 
-			case "unfav": {
+			case 'unfav': {
 				Action.setIsFavorite(objectIds, false, route);
 				break;
-			}
+			};
 
-			case "unlink": {
+			case 'unlink': {
 				C.ObjectCollectionRemove(targetId, objectIds, () => {
 					cb();
-					analytics.event("UnlinkFromCollection", {
-						count: length,
-						route,
-					});
+					analytics.event('UnlinkFromCollection', { count: length, route });
 				});
 				break;
-			}
+			};
 
-			case "createWidget": {
-				const firstBlock = S.Block.getFirstBlock(
-					S.Block.widgets,
-					1,
-					(it) => it.isWidget(),
-				);
+			case 'createWidget': {
+				const firstBlock = S.Block.getFirstBlock(S.Block.widgets, 1, it => it.isWidget());
 
-				Action.createWidgetFromObject(
-					first.id,
-					first.id,
-					firstBlock?.id,
-					I.BlockPosition.Top,
-				);
+				Action.createWidgetFromObject(first.id, first.id, firstBlock?.id, I.BlockPosition.Top);
 				break;
-			}
+			};
 
-			case "export": {
-				S.Popup.open("export", { data: { objectIds, route } });
+			case 'export': {
+				S.Popup.open('export', { data: { objectIds, route } });
 				break;
-			}
+			};
 
-			case "relation": {
-				S.Popup.open("relation", {
-					data: {
-						objectIds,
-						relationKeys,
-						route,
-						view,
-						targetId,
-						blockId,
-					},
-				});
+			case 'relation': {
+				S.Popup.open('relation', { data: { objectIds, relationKeys, route, view, targetId, blockId } });
 				break;
-			}
-		}
+			};
 
+		};
+		
 		close();
-	}
-}
+	};
+
+};
 
 export default MenuContext;
