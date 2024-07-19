@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 .objectManagerWrapper { height: 100%; display: flex; flex-direction: column; }
 .objectManagerWrapper {
@@ -22,10 +22,10 @@
         .side.right { justify-content: flex-end; }
 
         .icon { width: 20px; height: 20px; flex-shrink: 0; }
-        .icon.checkbox { background-image: url('~img/icon/archive/controls/checkbox0.svg'); }
-        .icon.checkbox.active { background-image: url('~img/icon/archive/controls/checkbox1.svg'); }
-        .icon.remove { background-image: url('~img/icon/menu/action/remove0.svg'); }
-        .icon.search { background-image: url('~img/icon/menu/action/search0.svg'); }
+        .icon.checkbox { background-image: url('img/icon/archive/controls/checkbox0.svg'); }
+        .icon.checkbox.active { background-image: url('img/icon/archive/controls/checkbox1.svg'); }
+        .icon.remove { background-image: url('img/icon/menu/action/remove0.svg'); }
+        .icon.search { background-image: url('img/icon/menu/action/search0.svg'); }
 
         .filterWrapper { overflow: hidden; width: 0px; transition: $transitionAllCommon; }
         .filterWrapper.active { width: 200px; }
@@ -58,10 +58,10 @@
             .info { width: calc(100% - 100px); flex-grow: 1; }
 
             .icon.checkbox {
-                flex-shrink: 0; cursor: default !important; background-image: url('~img/icon/archive/checkbox0.svg');
+                flex-shrink: 0; cursor: default !important; background-image: url('img/icon/archive/checkbox0.svg');
                 width: 18px; height: 18px; transition: none; flex-basis: 18px;
             }
-            .icon.checkbox.active { background-image: url('~img/icon/archive/checkbox1.svg'); }
+            .icon.checkbox.active { background-image: url('img/icon/archive/checkbox1.svg'); }
         }
     }
 

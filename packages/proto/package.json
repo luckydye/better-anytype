@@ -1,0 +1,13 @@
+{
+	"name": "@anytype/proto",
+	"version": "1.0.0",
+	"description": "",
+	"type": "commonjs",
+	"main": "index.js",
+	"scripts": {
+		"codegen": "protoc -I=./protos commands.proto --js_out=import_style=typescript:lib_out --grpc-web_out=import_style=typescript,mode=grpcwebtext:lib_out"
+	},
+	"dependencies": {
+		"google-protobuf": "^3.14.0"
+	}
+}

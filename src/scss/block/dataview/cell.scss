@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 .cell.c-shortText, .cell.c-url, .cell.c-email, .cell.c-phone {
 	.name { @include text-overflow-nw; display: inline-block; vertical-align: top; width: 100%; }
@@ -18,10 +18,10 @@
 	.empty { display: inline-block !important; visibility: visible !important; white-space: nowrap; }
 
 	.icon.clear { 
-		width: 20px; height: 20px; background-image: url('~img/icon/clear0.svg'); position: absolute; right: 14px; top: 50%;
+		width: 20px; height: 20px; background-image: url('img/icon/clear0.svg'); position: absolute; right: 14px; top: 50%;
 		transition: background-image $transitionCommon; margin: -10px 0px 0px 0px !important;
 	}
-	.icon.clear:hover { background-image: url('~img/icon/clear1.svg'); }
+	.icon.clear:hover { background-image: url('img/icon/clear1.svg'); }
 }
 
 .cell.isEditing.c-select.isSelect {
@@ -50,13 +50,13 @@
 
 .cellContent.c-checkbox { display: flex; flex-direction: row; align-items: center; gap: 0px 2px; }
 .cellContent.c-checkbox {
-	.icon { width: 20px; height: 20px; background-image: url('~img/icon/dataview/checkbox0.svg'); }
-	.icon.active { background-image: url('~img/icon/dataview/checkbox2.svg'); }
+	.icon { width: 20px; height: 20px; background-image: url('img/icon/dataview/checkbox0.svg'); }
+	.icon.active { background-image: url('img/icon/dataview/checkbox2.svg'); }
 
 	.label { line-height: 20px; }
 }
 .cellContent.c-checkbox.canEdit {
-	.icon:not(.active):hover { background-image: url('~img/icon/dataview/checkbox1.svg'); }
+	.icon:not(.active):hover { background-image: url('img/icon/dataview/checkbox1.svg'); }
 }
 
 .cellContent.c-file {
@@ -146,7 +146,7 @@
 		.element {
 			.icon.objectRemove { 
 				width: 12px; height: 20px; margin: 0px 0px 0px 2px; flex-shrink: 0; display: block;
-				background-image: url('~img/icon/object/remove.svg'); background-size: 8px;
+				background-image: url('img/icon/object/remove.svg'); background-size: 8px;
 			}
 			.icon.objectRemove:hover { opacity: 0.8; }
 		}

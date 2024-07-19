@@ -62,10 +62,10 @@ Fetch the latest binary from the [github releases](https://github.com/anyproto/a
 **Warning** When building client from source be aware that middleware version in latest release may diverge from current client version, so it is highly recommended to [build middleware from source](https://github.com/anyproto/anytype-heart/blob/main/docs/Build.md) as well.
 
 ```shell
-./update.sh <macos-latest|ubuntu-latest|windows-latest> <arm|amd> # arm/amd only for macos/ubuntu
+./scripts/update.sh <macos-latest|ubuntu-latest|windows-latest> <arm|amd> # arm/amd only for macos/ubuntu
 ```
 
-After `./update.sh` downloaded the binary or after compiling it from source, you need to move `anytypeHelper` into the `dist` Folder.
+After `./scripts/update.sh` downloaded the binary or after compiling it from source, you need to move `anytypeHelper` into the `dist` Folder.
 
 | OS CPU Type        | move command                        |
 |--------------------|-------------------------------------|

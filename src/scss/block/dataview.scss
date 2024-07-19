@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 .blocks {
 	.block.blockDataview { @include text-common; padding: 8px 0px 6px 0px; }
@@ -6,26 +6,26 @@
 		.wrapContent { z-index: 1; }
 
 		#set-loader { margin: 24px auto; }
-		.icon.plus { width: 20px; height: 20px; background-image: url('~img/icon/plus/menu0.svg'); }
+		.icon.plus { width: 20px; height: 20px; background-image: url('img/icon/plus/menu0.svg'); }
 		
 		.icon.edit { 
-			display: none; flex-shrink: 0; width: 20px; height: 20px; background-image: url('~img/icon/dataview/button/edit0.svg'); 
+			display: none; flex-shrink: 0; width: 20px; height: 20px; background-image: url('img/icon/dataview/button/edit0.svg'); 
 			background-size: 20px;
 		}
-		.icon.edit:hover { background-image: url('~img/icon/dataview/button/edit1.svg'); }
+		.icon.edit:hover { background-image: url('img/icon/dataview/button/edit1.svg'); }
 
 		.loadMore { 
 			display: flex; align-items: center; @include text-small; line-height: 20px; width: 100%; margin-top: 10px; padding: 4px 2px; color: var(--color-text-secondary);
 			transition: $transitionAllCommon;
 		}
 		.loadMore {
-			.icon { flex-shrink: 0; width: 20px; height: 20px; background-image: url('~img/arrow/loadMore0.svg'); }
+			.icon { flex-shrink: 0; width: 20px; height: 20px; background-image: url('img/arrow/loadMore0.svg'); }
 			.name { @include text-overflow-nw; width: calc(100% - 20px); }
 		}
 
 		.loadMore:hover { color: var(--color-text-primary); }
 		.loadMore:hover { 
-			.icon { background-image: url('~img/arrow/loadMore1.svg'); }
+			.icon { background-image: url('img/arrow/loadMore1.svg'); }
 		}
 
 		.dateSelect { padding: 2px 0px 2px 10px; display: flex; flex-direction: row; margin: 0px 0px 12px 0px; justify-content: space-between; }
@@ -42,7 +42,7 @@
 			.btn:hover { background-color: var(--color-shape-highlight-medium); }
 
 			.icon.arrow { 
-				width: 24px; height: 24px; background-size: 20px; background-image: url('~img/arrow/dateSelect.svg'); border-radius: 4px; 
+				width: 24px; height: 24px; background-size: 20px; background-image: url('img/arrow/dateSelect.svg'); border-radius: 4px; 
 				transition: $transitionAllCommon;
 			}
 			.icon.arrow.left { transform: rotateZ(180deg); }
@@ -65,7 +65,7 @@
 		.dataviewHead { display: flex; flex-direction: row; align-items: center; gap: 0px 2px; width: 100%; color: var(--color-text-primary); }
 		.dataviewHead {
 			.icon.source { 
-				width: 28px; height: 28px; background-size: 24px; background-image: url('~img/icon/dataview/button/source0.svg'); opacity: 0; 
+				width: 28px; height: 28px; background-size: 24px; background-image: url('img/icon/dataview/button/source0.svg'); opacity: 0; 
 				flex-shrink: 0;
 			}
 			.icon.source.active { opacity: 1; }
@@ -103,7 +103,7 @@
 						.inner { gap: 0px; height: 100%; }
 						.filterInputWrap { overflow: hidden; width: 0px; transition: width 0.2s $easeInQuint; }
 						.icon.clear, .line { display: none !important; }
-						.icon.search { background-image: url('~img/icon/dataview/button/search.svg'); }
+						.icon.search { background-image: url('img/icon/dataview/button/search.svg'); }
 					}
 					.filter.isActive {
 						.icon:hover { background-color: unset; }
@@ -119,7 +119,7 @@
 						.button.select {
 							width: 24px; height: 28px; border: 0 solid; border-left: 1px solid rgba(255, 255, 255, .1); border-radius: 0 6px 6px 0;
 						}
-						.button.select:after { content: ''; position: absolute; left: 1px; top: 4px; width: 20px; height: 20px; background: url('~img/arrow/button/white.svg') 50% 50% no-repeat; }
+						.button.select:after { content: ''; position: absolute; left: 1px; top: 4px; width: 20px; height: 20px; background: url('img/arrow/button/white.svg') 50% 50% no-repeat; }
 					}
 				}
 			}
@@ -127,11 +127,11 @@
 			.icon { position: relative; width: 28px; height: 28px; background-size: 20px; border-radius: 6px; transition: $transitionAllCommon; }
 			.icon:hover, .icon.active { background-color: var(--color-shape-highlight-medium); }
 
-			.icon.btn-filter { background-image: url('~img/icon/dataview/button/filter0.svg'); }
-			.icon.btn-filter.on { background-image: url('~img/icon/dataview/button/filter1.svg'); }
-			.icon.btn-sort { background-image: url('~img/icon/dataview/button/sort0.svg'); }
-			.icon.btn-sort.on { background-image: url('~img/icon/dataview/button/sort1.svg'); }
-			.icon.btn-settings { background-image: url('~img/icon/dataview/button/settings.svg'); }
+			.icon.btn-filter { background-image: url('img/icon/dataview/button/filter0.svg'); }
+			.icon.btn-filter.on { background-image: url('img/icon/dataview/button/filter1.svg'); }
+			.icon.btn-sort { background-image: url('img/icon/dataview/button/sort0.svg'); }
+			.icon.btn-sort.on { background-image: url('img/icon/dataview/button/sort1.svg'); }
+			.icon.btn-settings { background-image: url('img/icon/dataview/button/settings.svg'); }
 
 			.views { display: flex; gap: 0px 16px; flex-direction: row; align-items: center; justify-content: flex-start; }
 			.views {
@@ -143,7 +143,7 @@
 				max-width: 300px; color: var(--color-control-active);
 			}
 			.viewItem { 
-				.icon.arrow { width: 20px; height: 20px; background-image: url('~img/arrow/view.svg'); }
+				.icon.arrow { width: 20px; height: 20px; background-image: url('img/arrow/view.svg'); }
 			}
 			.viewItem:last-child { margin: 0px; }
 			.viewItem:hover, .viewItem.active { color: var(--color-text-primary); }
@@ -176,9 +176,9 @@
 				}
 				.element {
 					.icon { width: 20px; height: 20px; }
-					.icon.unlink { background-image: url('~img/icon/dataview/selection/unlink.svg'); }
-					.icon.archive { background-image: url('~img/icon/menu/action/remove0.svg'); }
-					.icon.done { background-image: url('~img/icon/dataview/selection/done.svg'); }
+					.icon.unlink { background-image: url('img/icon/dataview/selection/unlink.svg'); }
+					.icon.archive { background-image: url('img/icon/menu/action/remove0.svg'); }
+					.icon.done { background-image: url('img/icon/dataview/selection/done.svg'); }
 				}
 				.element:hover { background-color: var(--color-shape-highlight-medium); }
 			}
@@ -190,7 +190,7 @@
 
 		.viewContent {
 			.icon.drag { 
-				z-index: 1; width: 7px; height: 12px; background-image: url('~img/icon/dataview/dnd.svg'); cursor: grab;
+				z-index: 1; width: 7px; height: 12px; background-image: url('img/icon/dataview/dnd.svg'); cursor: grab;
 				position: absolute; top: 50%; margin: -6px 0px 0px 0px; left: 4px; opacity: 0; transition: opacity $transitionCommon;
 			}
 		}

@@ -1,0 +1,24 @@
+[tools]
+node = "20"
+jq = "latest"
+protoc = "21.12"
+
+[env]
+ELECTRON_SKIP_NOTARIZE = 1
+ELECTRON_SKIP_SENTRY = 1
+SERVER_PORT = 8080
+
+[tasks.dev]
+run = "mise run watch ::: electron"
+
+[tasks.watch]
+run = "bunx vite ."
+
+[tasks.electron]
+run = "curl --retry-all-errors --retry 10 --retry-delay 1 'http://localhost:8080' && bunx electron ."
+
+[tasks.fix]
+run = "bunx @biomejs/biome check --write ."
+
+[tasks.update]
+run = ["npm ci", "npm run update:locale", "./scripts/update.sh macos-latest"]

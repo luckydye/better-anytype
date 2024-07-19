@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 /* PageMainGraph */
 
@@ -50,7 +50,7 @@
         .section.relation {
 			.item.add {
 				.clickable:hover {
-					.icon.plus { background-image: url('~img/icon/plus/menu0.svg'); }
+					.icon.plus { background-image: url('img/icon/plus/menu0.svg'); }
 				}
 			}
         }
