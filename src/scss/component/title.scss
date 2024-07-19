@@ -1,3 +1,5 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
-.title { @include text-title; }
+.title {
+    @include text-title;
+}

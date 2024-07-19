@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Anytype</title>
+
+        <style>
+            .drag-region {
+                -webkit-app-region: drag;
+                height: 40px;
+                width: 100vw;
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="drag-region"></div>
+
+        <div id="root"></div>
+        <script
+            type="module"
+            src="./src/entry.tsx"
+            type="text/javascript"
+        ></script>
+
+        <!-- %REPLACE-JS% -->
+    </body>
+</html>

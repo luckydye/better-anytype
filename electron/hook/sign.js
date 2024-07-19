@@ -1,9 +1,9 @@
-const Util = require('./util.js');
+const Util = require("./util.js");
 
-exports.default = async function (context) {
+exports.default = async (context) => {
 	if (process.env.ELECTRON_SKIP_NOTARIZE) {
 		return;
-	};
+	}
 
 	const cmd = [
 		`AzureSignTool.exe sign`,
@@ -18,7 +18,7 @@ exports.default = async function (context) {
 		`--azure-key-vault-certificate "${process.env.AZURE_CERT_NAME}"`,
 		`-v`,
 		`"${context.path}"`,
-	].join(' ');
+	].join(" ");
 
 	return await Util.execPromise(cmd);
 };

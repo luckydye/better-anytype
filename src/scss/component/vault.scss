@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 .vault { 
 	position: fixed; background-color: var(--color-shape-primary); z-index: 30; left: 0px; top: 0px; width: $vaultWidthCollapsed; height: 100%;

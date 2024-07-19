@@ -1,6 +1,6 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
-$themePath: '~img/theme/dark';
+$themePath: 'img/theme/dark';
 
 html.themeDark {
 	/* Text */
@@ -139,7 +139,7 @@ html.themeDark {
 	.button.black:not(.disabled):hover,
     .button.black:not(.disabled).hover { background: var(--color-control-active); }
 	.button.black {
-		.arrow { background-image: url('~img/arrow/button/black.svg'); }
+		.arrow { background-image: url('img/arrow/button/black.svg'); }
 	}
 
     .button.blank { color: var(--color-text-primary); border-color: var(--color-shape-primary); }
@@ -257,7 +257,7 @@ html.themeDark {
 
     .header.isCommon {
         .path { border: 0px; line-height: 28px; }
-        .headerBanner.withMenu:after { background-image: url('~img/arrow/button/white.svg'); }
+        .headerBanner.withMenu:after { background-image: url('img/arrow/button/white.svg'); }
     }
 
 	.header.mainStore.withBanner {

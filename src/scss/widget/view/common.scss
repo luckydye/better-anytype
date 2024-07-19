@@ -1,24 +1,53 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
-.widget.widgetView { display: flex; flex-direction: column; };
 .widget.widgetView {
-	.loaderWrapper { position: relative; }
-	.innerWrap { height: 100%; padding-bottom: 8px; }
-	.contentWrapper { flex-grow: 1; min-height: 8px; }
-	.head { padding-bottom: 4px; }
+    display: flex;
+    flex-direction: column;
+}
+.widget.widgetView {
+    .loaderWrapper {
+        position: relative;
+    }
+    .innerWrap {
+        height: 100%;
+        padding-bottom: 8px;
+    }
+    .contentWrapper {
+        flex-grow: 1;
+        min-height: 8px;
+    }
+    .head {
+        padding-bottom: 4px;
+    }
 
-	#viewSelect { padding: 0px 16px; }
-	#viewSelect:empty { display: none; }
-	#viewSelect {
-		.select { border: none; margin-left: -6px; padding-right: 16px; }
-		.select {
-			.item { @include text-small; line-height: 18px !important; font-weight: 500; }
-			.icon.arrow { 
-				width: 8px !important; height: 5px !important; margin-top: -2.5px !important; background-image: url('~img/arrow/widget.svg') !important; 
-				background-size: contain; right: 4px !important;
-			}
-		}
-	}
+    #viewSelect {
+        padding: 0px 16px;
+    }
+    #viewSelect:empty {
+        display: none;
+    }
+    #viewSelect {
+        .select {
+            border: none;
+            margin-left: -6px;
+            padding-right: 16px;
+        }
+        .select {
+            .item {
+                @include text-small;
+                line-height: 18px !important;
+                font-weight: 500;
+            }
+            .icon.arrow {
+                width: 8px !important;
+                height: 5px !important;
+                margin-top: -2.5px !important;
+                background-image: url("img/arrow/widget.svg") !important;
+                background-size: contain;
+                right: 4px !important;
+            }
+        }
+    }
 }
 
 .widget.widgetView.isPreview { padding: 0px; }
@@ -35,13 +64,17 @@
 }
 
 .widget.widgetView.isClosed {
-	.contentWrapper { height: 8px; }
-	.innerWrap { opacity: 0; }
+    .contentWrapper {
+        height: 8px;
+    }
+    .innerWrap {
+        opacity: 0;
+    }
 }
 
 .widget.widgetView {
-	@import "./board.scss";
-	@import "./calendar.scss";
-	@import "./gallery.scss";
-	@import "./list.scss";
+    @import "./board.scss";
+    @import "./calendar.scss";
+    @import "./gallery.scss";
+    @import "./list.scss";
 }

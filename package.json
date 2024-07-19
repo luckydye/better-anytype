@@ -3,10 +3,11 @@
 	"version": "0.41.32-alpha",
 	"description": "Anytype",
 	"main": "electron.js",
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
-		"precommit": "npx lint-staged",
 		"typecheck": "npx tsc --noEmit -p tsconfig.json",
-		"lint": "eslint .",
 		"electron": "npx electron .",
 		"electron-win": "npx electron.cmd .",
 		"start:watch": "cross-env-shell webpack-dev-server --progress --mode=development --node-env=development  --env SERVER_PORT=$SERVER_PORT --env DATA_PATH=$DATA_PATH --history-api-fallback --cache",
@@ -16,7 +17,7 @@
 		"start:dev-win": "npm-run-all --parallel start:watch start:electron-wait-webpack-win",
 		"build": "webpack --mode=production --node-env=production --config webpack.config.js",
 		"build:dev": "webpack --mode=development --node-env=development --config webpack.config.js",
-		"build:deps": "webpack --config webpack.node.config.js --stats detailed | grep 'node_modules' | sed -E 's/.*(node_modules[\\/][^\\\\/[:space:]]{1,})[\\\\/].*/\\1/' | uniq | node save-node-deps.js",
+		"build:deps": "webpack --config webpack.node.config.js --stats detailed | grep 'node_modules' | sed -E 's/.*(node_modules[\\/][^\\\\/[:space:]]{1,})[\\\\/].*/\\1/' | uniq | node scripts/save-node-deps.js",
 		"build:nmh": "go build -o dist/nativeMessagingHost ./go/nativeMessagingHost.go",
 		"build:nmh-win": "go build -o dist/nativeMessagingHost.exe ./go/nativeMessagingHost.go",
 		"dist:mac": "npm run build:deps && webpack --progress --mode=production --node-env=production && DATE=`date '+%Y-%m-%d_%H_%M'` GIT_COMMIT=`git rev-parse --short HEAD` electron-builder --macos --arm64 --x64",
@@ -30,7 +31,6 @@
 		"publish:linux": "webpack --mode=production --node-env=production && DATE=`date '+%Y-%m-%d_%H_%M'` GIT_COMMIT=`git rev-parse --short HEAD` BUILD_NUMBER=`git rev-parse --short HEAD` electron-builder --linux --publish  always",
 		"publish:win": "webpack --mode=production --node-env=production && DATE=`date '+%Y-%m-%d_%H_%M'` GIT_COMMIT=`git rev-parse --short HEAD` BUILD_NUMBER=`git rev-parse --short HEAD` electron-builder --windows --publish  always",
 		"postinstall": "npx patch-package && electron-builder install-app-deps",
-		"prepare": "husky install",
 		"update:locale": "node ./electron/hook/locale.js"
 	},
 	"repository": {
@@ -48,27 +48,22 @@
 	"homepage": "https://anytype.io",
 	"devDependencies": {
 		"@electron/notarize": "^2.1.0",
+		"@originjs/vite-plugin-commonjs": "^1.0.3",
 		"@types/history": "^4.7.8",
 		"@types/jquery": "^3.5.14",
 		"@types/katex": "^0.14.0",
 		"@types/lodash": "^4.14.165",
-		"@types/node": "^12.19.4",
+		"@types/node": "^20.14.10",
 		"@types/prismjs": "^1.16.1",
 		"@types/raf": "^3.4.0",
 		"@types/react": "^16.14.31",
 		"@types/react-dom": "^16.9.16",
 		"@types/react-router-dom": "^4.3.5",
-		"@typescript-eslint/eslint-plugin": "^6.18.1",
-		"@typescript-eslint/parser": "^6.18.1",
 		"cross-env": "^7.0.2",
 		"css-loader": "^3.6.0",
 		"electron": "^31.0.0",
 		"electron-builder": "^24.13.3",
-		"eslint": "^8.29.0",
-		"eslint-plugin-react": "^7.31.11",
-		"husky": "^8.0.3",
 		"license-checker": "^25.0.1",
-		"lint-staged": "^13.0.3",
 		"node-loader": "^1.0.2",
 		"npm": "^10.5.0",
 		"npm-run-all": "^4.1.5",
@@ -81,6 +76,8 @@
 		"typescript": "^5.3.3",
 		"typescript-eslint": "^0.0.1-alpha.0",
 		"url-loader": "^4.1.1",
+		"vite": "^5.3.3",
+		"vite-plugin-commonjs": "^0.10.1",
 		"wait-for-localhost-cli": "^3.0.0",
 		"webpack": "^5.74.0",
 		"webpack-bundle-analyzer": "^4.5.0",
@@ -88,6 +85,9 @@
 		"webpack-dev-server": "^4.13.1"
 	},
 	"dependencies": {
+		"@anytype/locales": "workspace:",
+		"@anytype/proto": "workspace:",
+		"@biomejs/biome": "^1.8.3",
 		"@electron/remote": "^2.1.2",
 		"@emoji-mart/data": "^1.1.2",
 		"@sentry/browser": "^7.39.0",
@@ -161,9 +161,7 @@
 			{
 				"name": "Anytype",
 				"role": "Editor",
-				"schemes": [
-					"anytype"
-				]
+				"schemes": ["anytype"]
 			}
 		],
 		"asarUnpack": [
@@ -198,9 +196,7 @@
 			{
 				"from": "node_modules/regedit/vbs",
 				"to": "regedit/vbs",
-				"filter": [
-					"**/*"
-				]
+				"filter": ["**/*"]
 			}
 		],
 		"files": [
@@ -549,8 +545,8 @@
 			"type": "distribution",
 			"hardenedRuntime": true,
 			"gatekeeperAssess": false,
-			"entitlements": "electron/entitlements.mac.plist",
-			"entitlementsInherit": "electron/entitlements.mac.plist",
+			"entitlements": "./electron/entitlements.mac.plist",
+			"entitlementsInherit": "./electron/entitlements.mac.plist",
 			"target": {
 				"target": "default",
 				"arch": [

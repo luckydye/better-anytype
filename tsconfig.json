@@ -1,69 +1,48 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist/",
-        "sourceMap": true,
-        "noImplicitAny": false,
-        "module": "esnext",
-        "target": "es2017",
-        "jsx": "react",
-        "resolveJsonModule": true,
-        "moduleResolution": "Node",
-        "experimentalDecorators": false,
-        "allowSyntheticDefaultImports": true,
-        "allowJs": true,
-        "baseUrl": "./src",
-		"lib": [ "es5", "dom" ],
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "module": "ES2022",
+    "target": "ES2022",
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "experimentalDecorators": false,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "baseUrl": "./src",
+    "lib": ["ES2022", "dom"],
 
-        "paths": {
-            "json": [
-                "json"
-            ],
-            "Component/*": [
-                "ts/component/*"
-            ],
-            "Component": [
-                "ts/component"
-            ],
-            "Interface/*": [
-                "ts/interface/*"
-            ],
-            "Interface": [
-                "ts/interface"
-            ],
-            "Docs/*": [
-                "ts/docs/*"
-            ],
-            "Docs": [
-                "ts/docs"
-            ],
-            "Lib/*": [
-              "ts/lib/*"
-            ],
-            "Lib": [
-				"ts/lib"
-            ],
-            "Model/*": [
-              "ts/model/*"
-            ],
-            "Model": [
-				"ts/model"
-            ],
-            "Store/*": [
-                "ts/store/*",
-            ],
-            "Store": [
-                "ts/store",
-            ],
-			"dist/*": [
-                "../dist/*"
-            ],
-          }
+    "paths": {
+      "json": ["json"],
+      "Component/*": [
+        "component/*"
+      ],
+      "Component": [
+        "component"
+      ],
+      "Interface/*": [
+        "interface/*"
+      ],
+      "Interface": [
+        "interface"
+      ],
+      "Docs/*": ["docs/*"],
+      "Docs": ["docs"],
+      "Lib/*": ["lib/*"],
+      "Lib": ["lib"],
+      "Model/*": ["model/*"],
+      "Model": ["model"],
+      "Store/*": ["store/*"],
+      "Store": ["store"],
+      "dist/*": ["../dist/*"]
     },
-	"include": [
-		"src/**/*"
-	],
-    "exclude": [ 
-		"node_modules/**/*", 
-		"dist/**/*", 
-	]
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules/**/*",
+    "dist/**/*"
+  ]
 }

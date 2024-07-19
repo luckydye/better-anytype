@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 .widget { background: var(--color-bg-primary); border-radius: 12px; transform: translate(0px, 0px); position: relative; }
 .widget:last-child { margin: 0px; }
@@ -21,10 +21,10 @@
 		.iconWrap.active { opacity: 1; background-color: var(--color-shape-highlight-medium); }
 
 		.icon { width: 20px; height: 20px; flex-shrink: 0; }
-		.icon.back { background-image: url('~img/icon/widget/back.svg'); }
-		.icon.options { background-image: url('~img/icon/widget/options.svg'); }
-		.icon.collapse { background-image: url('~img/icon/widget/collapse.svg'); }
-		.icon.plus { background-image: url('~img/icon/widget/plus.svg'); }
+		.icon.back { background-image: url('img/icon/widget/back.svg'); }
+		.icon.options { background-image: url('img/icon/widget/options.svg'); }
+		.icon.collapse { background-image: url('img/icon/widget/collapse.svg'); }
+		.icon.plus { background-image: url('img/icon/widget/plus.svg'); }
 		.icon.collapse.isClosed { transform: rotateZ(-90deg); }
 
 		.buttons { flex-shrink: 0; flex-direction: row; align-items: center; gap: 0px 6px; display: none; position: relative; z-index: 2; }
@@ -45,7 +45,7 @@
 	.icon.remove {
 		.inner {
 			height: 20px; width: 20px; border-radius: 50%; background-color: var(--color-bg-primary);
-			background-image: url('~img/icon/widget/remove.svg'); background-size: 12px; box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2); 
+			background-image: url('img/icon/widget/remove.svg'); background-size: 12px; box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2); 
 			background-repeat: no-repeat; background-position: center; position: absolute; left: 50%; top: 50%; margin: -10px 0px 0px -10px;
 		}
 	}
@@ -110,8 +110,8 @@
 }
 .button.widget {
 	.icon { height: 20px; width: 20px; margin: 0px; flex-shrink: 0; }
-	.icon.store { background-image: url('~img/icon/widget/store.svg'); }
-	.icon.bin { background-image: url('~img/icon/widget/bin.svg'); }
+	.icon.store { background-image: url('img/icon/widget/store.svg'); }
+	.icon.bin { background-image: url('img/icon/widget/bin.svg'); }
 }
 
 @import "./space.scss";

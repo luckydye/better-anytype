@@ -1,4 +1,4 @@
-@import "~scss/_mixins";
+@import "scss/_mixins";
 
 .menus {
 	.menu.menuDataviewOptionList { width: var(--menu-width-value);; }
@@ -75,7 +75,7 @@
 				.item {
 					.icon.tick { 
 						position: absolute; left: 50%; top: 50%; margin: -10px 0px 0px -10px; width: 20px; height: 20px; 
-						background-image: url('~img/icon/tick.svg'); 
+						background-image: url('img/icon/tick.svg'); 
 					}
 				}
 

@@ -1,14 +1,20 @@
-const { ipcRenderer, contextBridge } = require('electron');
-const { app, getCurrentWindow, getGlobal, dialog, BrowserWindow } = require('@electron/remote');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const tmpPath = () => app.getPath('temp');
+const { ipcRenderer, contextBridge } = require("electron");
+const {
+	app,
+	getCurrentWindow,
+	getGlobal,
+	dialog,
+	BrowserWindow,
+} = require("@electron/remote");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const tmpPath = () => app.getPath("temp");
 
-contextBridge.exposeInMainWorld('Electron', {
+contextBridge.exposeInMainWorld("Electron", {
 	version: {
 		app: app.getVersion(),
-		os: [ os.platform(), process.arch, process.getSystemVersion() ].join(' '),
+		os: [os.platform(), process.arch, process.getSystemVersion()].join(" "),
 		system: process.getSystemVersion(),
 		device: os.hostname(),
 	},
@@ -16,12 +22,12 @@ contextBridge.exposeInMainWorld('Electron', {
 	arch: process.arch,
 
 	isPackaged: app.isPackaged,
-	userPath: () => app.getPath('userData'),
+	userPath: () => app.getPath("userData"),
 	tmpPath,
-	logPath: () => path.join(app.getPath('userData'), 'logs'),
+	logPath: () => path.join(app.getPath("userData"), "logs"),
 	filePath: (...args) => path.join(...args),
-	dirname: fp => path.dirname(fp),
-	defaultPath: () => path.join(app.getPath('appData'), app.getName()),
+	dirname: (fp) => path.dirname(fp),
+	defaultPath: () => path.join(app.getPath("appData"), app.getName()),
 
 	currentWindow: () => getCurrentWindow(),
 	isMaximized: () => BrowserWindow.getFocusedWindow()?.isMaximized(),
@@ -34,7 +40,7 @@ contextBridge.exposeInMainWorld('Electron', {
 	showOpenDialog: dialog.showOpenDialog,
 
 	fileWrite: (name, data, options) => {
-		name = String(name || 'temp');
+		name = String(name || "temp");
 		options = options || {};
 
 		const fn = path.parse(name).base;
@@ -51,16 +57,16 @@ contextBridge.exposeInMainWorld('Electron', {
 
 	Api: (id, cmd, args) => {
 		id = Number(id) || 0;
-		cmd = String(cmd || '');
+		cmd = String(cmd || "");
 		args = args || [];
 
 		let ret = new Promise(() => {});
 
-		try { 
-			ret = ipcRenderer.invoke('Api', id, cmd, args).catch((error) => {
+		try {
+			ret = ipcRenderer.invoke("Api", id, cmd, args).catch((error) => {
 				console.log(error);
-			}); 
-		} catch (e) {};
+			});
+		} catch (e) {}
 
 		return ret;
 	},

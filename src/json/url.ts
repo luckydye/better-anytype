@@ -1,12 +1,12 @@
 export default {
-	community:			 'https://community.anytype.io/t/how-to-file-a-bug-report/957',
-	tutorial:			 'https://doc.anytype.io/',
-	telegram:			 'https://t.me/anytype',
-	twitter:			 'https://twitter.com/AnytypeLabs',
-	mail:				 'https://anytype.io/?popup=mailinglist',
+	community: "https://community.anytype.io/t/how-to-file-a-bug-report/957",
+	tutorial: "https://doc.anytype.io/",
+	telegram: "https://t.me/anytype",
+	twitter: "https://twitter.com/AnytypeLabs",
+	mail: "https://anytype.io/?popup=mailinglist",
 	unsplash: {
-		site:			 'https://unsplash.com/',
-		utm:			 '?utm_source=Anytype&utm_medium=referral'
+		site: "https://unsplash.com/",
+		utm: "?utm_source=Anytype&utm_medium=referral",
 	},
 	download:			 'https://download.anytype.io/?utm_campaign=add_device&utm_source=app&utm_medium=qr',
 	terms:				 'https://anytype.io/terms_of_use/',
@@ -24,11 +24,11 @@ export default {
 	share: 				 'https://join.anytype.io/',
 
 	survey: {
-		register:		 'https://community.anytype.io/survey0',
-		delete:			 'https://community.anytype.io/survey1',
-		pmf:			 'https://community.anytype.io/survey2#anytypeid=%s',
-		object:			 'https://community.anytype.io/survey3',
-		shared:			 'https://community.anytype.io/survey4',
-		multiplayer:	 'https://community.anytype.io/survey5'
-	}
+		register: "https://community.anytype.io/survey0",
+		delete: "https://community.anytype.io/survey1",
+		pmf: "https://community.anytype.io/survey2#anytypeid=%s",
+		object: "https://community.anytype.io/survey3",
+		shared: "https://community.anytype.io/survey4",
+		multiplayer: "https://community.anytype.io/survey5",
+	},
 };
